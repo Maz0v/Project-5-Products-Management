@@ -29,7 +29,8 @@ const isValidfiles = function (files) {
 const createUser = async function (req, res) {
     try {
 
-        const requestBody = JSON.parse(req.body.data)
+        const requestBody = req.body
+        console.log(requestBody)
         if (!isValidRequestBody(requestBody)) {
             res.status(400).send({ status: false, Message: "Invalid request parameters, Please provide user details" })
             return
@@ -37,11 +38,11 @@ const createUser = async function (req, res) {
 
         const { fname, lname, email, phone, password, address } = requestBody
 
-        const files = req.files
-        if (!isValidfiles(files)) {
-            res.status(400).send({ status: false, Message: "Please provide user's profile picture" })
-            return
-        }
+        // const files = req.files
+        // if (!isValidfiles(files)) {
+        //     res.status(400).send({ status: false, Message: "Please provide user's profile picture" })
+        //     return
+        // }
         if (!isValid(fname)) {
             res.status(400).send({ status: false, Message: "Please provide user's first name" })
             return
@@ -130,14 +131,14 @@ const createUser = async function (req, res) {
 
         //--------------------validation ends -------------------------------------------------------------------------------------------------------------
 
-        const profilePicture = await uploadFile(files[0])
+       // const profilePicture = await uploadFile(files[0])
 
         const encryptedPassword = await bcrypt.hash(password, saltRounds)
 
         let FEmail = email.split(' ').join('')
 
         const userData = {
-            fname: fname, lname: lname, profileImage: profilePicture, email: FEmail,
+            fname: fname, lname: lname, email: FEmail, //profileImage: profilePicture, 
             phone, password: encryptedPassword, address: address
         }
 
